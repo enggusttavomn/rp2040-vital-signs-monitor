@@ -1,0 +1,30 @@
+name: Firmware
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends ninja-build gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+      - name: Prepare Pico SDK 2.1.1
+        run: |
+          git clone --depth 1 --branch 2.1.1 https://github.com/raspberrypi/pico-sdk.git "$RUNNER_TEMP/pico-sdk"
+          test "$(git -C "$RUNNER_TEMP/pico-sdk" rev-parse HEAD)" = "bddd20f928ce76142793bef434d4f75f4af6e433"
+          git -C "$RUNNER_TEMP/pico-sdk" submodule update --init --depth 1 lib/tinyusb
+      - name: Build firmware
+        run: |
+          cmake -S . -B build/firmware -G Ninja -DPICO_SDK_PATH="$RUNNER_TEMP/pico-sdk"
+          cmake --build build/firmware
+      - uses: actions/upload-artifact@v4
+        with:
+          name: main-uf2
+          path: build/firmware/**/main.uf2
+          if-no-files-found: error
+

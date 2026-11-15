@@ -351,6 +351,24 @@ O sistema utiliza os seguintes algoritmos para processamento de sinais e convers
 - LED Vermelho: Qualquer valor crítico detectado
 - Buzzer: Emite 3 beeps rápidos quando qualquer condição crítica é detectada
 
+## Compilação e verificação automatizada
+
+Para compilar sem depender do editor, instale CMake 3.13+, um gerador
+(Ninja ou Make), GNU Arm Embedded (`arm-none-eabi-gcc` e bibliotecas
+Newlib/C++) e o **Pico SDK 2.1.1**, incluindo o submódulo `lib/tinyusb`.
+Defina `PICO_SDK_PATH` com o caminho absoluto do SDK e execute na raiz:
+
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+O firmware é gerado em `build/main.uf2`. A extensão do VS Code é opcional.
+O workflow [Firmware](.github/workflows/firmware.yml) compila a cada push
+e pull request, confere o commit do SDK e disponibiliza o UF2 como artefato.
+O build verifica compilação e linkedição; os testes dos periféricos descritos
+abaixo exigem a placa e não são executados pelo CI.
+
 ## 🚀 Instalação e Configuração
 
 ### Pré-requisitos
