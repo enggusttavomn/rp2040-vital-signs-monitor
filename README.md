@@ -1,4 +1,4 @@
-# Monitor de Sinais Vitais - Raspberry Pi Pico
+# Monitor experimental de sinais vitais
 
 Um sistema completo de monitoramento de sinais vitais implementado para o
 microcontrolador Raspberry Pi Pico, utilizando sensores MAX30102 e MLX90614,
